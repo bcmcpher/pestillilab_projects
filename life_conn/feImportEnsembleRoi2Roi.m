@@ -7,6 +7,7 @@ function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout)
 %
 % Inputs:
 %   ens_tck: string with path to ensemble track outputs
+%   fout: sting of the output file name
 %
 % Outputs:
 %   fgOut: merged fiber group
@@ -33,7 +34,9 @@ if ~exist(fout, 'file')
     
     % Build an empty mrDiffusion fier group.
     fgOut = dtiNewFiberGroup(f);
-
+else 
+    % this logic doesn't work
+    fgOut = load('fout');
 end
 
 display('Beginning Loop of .tck files...');
@@ -98,7 +101,7 @@ findx = 1;
 for jj = 1:length(dict)
     
     dict(jj).ifib = [ findx, findx + dict(jj).nfib ];
-    findx = findx + dict(jj).nfib;
+    findx = findx + dict(jj).nfib + 1;
 
 end
 
@@ -151,6 +154,7 @@ try
         count = str2double(header{numIndx}(12:end));
     end
     
+    fclose(fid);
     % fprintf(1,'Reading Fiber Data for %d fibers...\n', count);
     end
 end
