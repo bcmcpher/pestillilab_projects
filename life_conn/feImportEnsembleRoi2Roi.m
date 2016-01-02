@@ -29,7 +29,7 @@ files = files(3:length(files));
 if ~exist(fout, 'file')
     
     % Strip out the file name.
-    [~, f] = fileparts(fout);
+    [ ~, f ] = fileparts(fout);
     
     % Build an empty mrDiffusion fier group.
     fgOut = dtiNewFiberGroup(f);
@@ -111,10 +111,10 @@ function count = feReadFiberCount(filename)
 % just enough to get fiber counts
 
 % Strip out the file name.
-[~,f] = fileparts(filename);
+%[ ~, f ] = fileparts(filename);
 
 % Build an empty mrDiffusion fier group.
-fg = dtiNewFiberGroup(f);
+%fg = dtiNewFiberGroup(f);
 
 % Read a binary fiber tracking file (.tck) output from mrTrix. 
 fid = fopen(filename ,'r','ieee-le'); % Note that we assume that the data 
