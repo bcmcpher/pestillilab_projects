@@ -1,4 +1,4 @@
-function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout, dout)
+function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout)
 %%
 % Brent McPherson
 % 20151231
@@ -16,6 +16,8 @@ function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout, dout)
 
 %% read out necessary unique values
 
+display('indexing .tck files...');
+
 % read in all the files
 files = dir(ens_tck);
 
@@ -27,7 +29,7 @@ files = files(3:length(files));
 if ~exist(fout, 'file')
     
     % Strip out the file name.
-    [~, f] = fileparts(fgOut);
+    [~, f] = fileparts(fout);
     
     % Build an empty mrDiffusion fier group.
     fgOut = dtiNewFiberGroup(f);
@@ -89,29 +91,27 @@ for ii = 1:length(files)
     
 end
 
-% rename dict to dout
-dout = dict;
+% loop index for fiber counts
 findx = 1;
 
 % create indice pairs for fibers for simplified subsets
-for jj = 1:length(dout)
+for jj = 1:length(dict)
     
-    dout(jj).ifib = [ findx, findx + dout(jj).nfib ];
-    findx = findx + dout(jj).nfib;
+    dict(jj).ifib = [ findx, findx + dict(jj).nfib ];
+    findx = findx + dict(jj).nfib;
 
 end
-
 
 end
 % end of function
 
 %% internal functions
-function count = feReadFiberCount(tckfile)
+function count = feReadFiberCount(filename)
 % copied from dtiImportFibersMrtrix.m
 % just enough to get fiber counts
 
 % Strip out the file name.
-[~,f] = fileparts(tckfile);
+[~,f] = fileparts(filename);
 
 % Build an empty mrDiffusion fier group.
 fg = dtiNewFiberGroup(f);
@@ -151,6 +151,6 @@ try
         count = str2double(header{numIndx}(12:end));
     end
     
-    fprintf(1,'Reading Fiber Data for %d fibers...\n', count);
+    % fprintf(1,'Reading Fiber Data for %d fibers...\n', count);
     end
 end
