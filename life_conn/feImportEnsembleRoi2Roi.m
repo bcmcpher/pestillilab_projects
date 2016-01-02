@@ -1,56 +1,156 @@
+function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout, dout)
 %%
 % Brent McPherson
 % 20151231
 % import series of .tck files and create a key of # of fibers for each file
+% skips files that are empty
+%
+% Inputs:
+%   ens_tck: string with path to ensemble track outputs
+%
+% Outputs:
+%   fgOut: merged fiber group
+%   dict: meta information for determining # of fibers during virtual
+%   lesions
 %
 
 %% read out necessary unique values
 
 % read in all the files
-files = dir('ensemble_tracks');
+files = dir(ens_tck);
 
-% parse info out of file name
-tmp = files(15).name;
+% remove dot folders
+files = files(3:length(files));
 
-% find indices of underscores
-und = strfind(tmp, '_');
+% create fout if it doesn't exist
+% copied from dtiImportFibersMrtrix.m
+if ~exist(fout, 'file')
+    
+    % Strip out the file name.
+    [~, f] = fileparts(fgOut);
+    
+    % Build an empty mrDiffusion fier group.
+    fgOut = dtiNewFiberGroup(f);
 
-% find recon algorithm
-rc = tmp(und(2)+1:und(3)-1);
+end
 
-% find curvature
-cr = tmp(und(3)+1:und(4)-1);
+display('Beginning Loop of .tck files...');
 
-%% split roi names
+% loop over every file
+for ii = 1:length(files)
+    
+    % if there are fibers in the file
+    if feReadFiberCount(fullfile(ens_tck, files(ii).name)) > 0
+        
+        % parse info out of file name
+        tmp = files(ii).name;
+        
+        % read in, add to dictionary
+        fg = dtiImportFibersMrtrix(fullfile(ens_tck, tmp));
+        
+        % merge new fiber group w/ output fiber group
+        fgOut = dtiMergeFiberGroups(fgOut, fg, fout);
+        
+        % write down fgOut
+        fgWrite(fgOut, fout, 'mat');        
+                              
+        % find indices of underscores
+        und = strfind(tmp, '_');
+        
+        % find recon algorithm
+        algo = tmp(und(2)+1:und(3)-1);
+        
+        % find curvature
+        curv = tmp(und(3)+1:und(4)-1);
+        
+        % split roi names
+        % isolate roi descriptions and trim file exention
+        rois = tmp(und(4)+1:length(tmp)-4);
+        
+        % find middle index and separate rois
+        splt = strfind(rois, '_to_');
+        roi1 = rois(1:splt-1);
+        roi2 = rois(splt+4:length(rois));
+        
+        % create dictionary entry
+        dict(ii).file = tmp;
+        dict(ii).algo = algo;
+        dict(ii).curv = curv;
+        dict(ii).roi1 = roi1;
+        dict(ii).roi2 = roi2;
+        dict(ii).nfib = length(fg.fibers);
+       
+    else
+        
+        % skip to next iteration
+        continue
+        
+    end
+    
+end
 
-% isolate roi descriptions and trim file exention
-rois = tmp(und(4)+1:length(tmp)-4);
+% rename dict to dout
+dout = dict;
+findx = 1;
 
-% find middle index and separate rois
-splt = strfind(rois, '_to_');
-roi1 = rois(1:splt-1);
-roi2 = rois(splt+4:length(rois));
+% create indice pairs for fibers for simplified subsets
+for jj = 1:length(dout)
+    
+    dout(jj).ifib = [ findx, findx + dout(jj).nfib ];
+    findx = findx + dout(jj).nfib;
 
-%% import fiber group
-
-% import fiber group, save as .mat
-fg = dtiImportFibersMrtrix(fullfile('ensemble_tracks',tmp));
-fgWrite(fg, fg.name, 'mat');
-
-%% create dictionary
-
-dict.file = tmp;
-dict.algo = rc;
-dict.curv = cr; 
-dict.roi1 = roi1;
-dict.roi2 = roi2;
-
-if isempty(fg.fibers{1})
-    dict.nfib = 0;
-else
-    dict.nfib = length(fg.fibers);
 end
 
 
+end
+% end of function
 
+%% internal functions
+function count = feReadFiberCount(tckfile)
+% copied from dtiImportFibersMrtrix.m
+% just enough to get fiber counts
 
+% Strip out the file name.
+[~,f] = fileparts(tckfile);
+
+% Build an empty mrDiffusion fier group.
+fg = dtiNewFiberGroup(f);
+
+% Read a binary fiber tracking file (.tck) output from mrTrix. 
+fid = fopen(filename ,'r','ieee-le'); % Note that we assume that the data 
+                                      % always little-endian. 
+if(fid==-1), error('Unable to access file %s\n', filename);end
+
+% Read the .tck file just opened.
+try
+    % Read the text header, line-by-line, until the 'END' keyword. We'll
+    % store all header fields in a cell array and then pull out the ones
+    % that we need below.
+    ln = fgetl(fid);
+    ii = 1;
+    while(~strcmp(ln,'END'))
+        header{ii} = ln;
+        ln = fgetl(fid);
+        ii = ii+1;
+    end
+   
+    % Get the datatype from the header cell array.
+    dt = header{strmatch('datatype:',header)};
+    if(isempty(findstr(dt,'Float32LE')))
+        % *** FIXME: we should close the file and reopen in big-endian.
+        error('Only Float32LE data supported!');
+    end
+    
+    % Get the number of tracts from the header cell array. There seem to
+    % be two possible keywords for this field.
+    numIndx = strmatch('num_tracks:',header);
+    if(isempty(numIndx))
+        numIndx = strmatch('count:',header); 
+        count = str2double(header{numIndx}(7:end));
+    else
+        count = str2double(header{numIndx}(12:end));
+    end
+    
+    fprintf(1,'Reading Fiber Data for %d fibers...\n', count);
+    end
+end
