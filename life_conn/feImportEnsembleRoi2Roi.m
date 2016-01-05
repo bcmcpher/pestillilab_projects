@@ -39,6 +39,9 @@ else
     fgOut = load('fout');
 end
 
+% create counter for .tck files with fibers to keep dict small
+iter = 1;
+
 display('Beginning Loop of .tck files...');
 
 % loop over every file
@@ -78,13 +81,16 @@ for ii = 1:length(files)
         roi2 = rois(splt+4:length(rois));
         
         % create dictionary entry
-        dict(ii).file = tmp;
-        dict(ii).algo = algo;
-        dict(ii).curv = curv;
-        dict(ii).roi1 = roi1;
-        dict(ii).roi2 = roi2;
-        dict(ii).nfib = length(fg.fibers);
+        dict(iter).file = tmp;
+        dict(iter).algo = algo;
+        dict(iter).curv = curv;
+        dict(iter).roi1 = roi1;
+        dict(iter).roi2 = roi2;
+        dict(iter).nfib = length(fg.fibers);
        
+        % iterate counter of dict files
+        iter = iter + 1;
+        
     else
         
         % skip to next iteration
