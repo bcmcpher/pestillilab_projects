@@ -1,21 +1,6 @@
-function [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout)
-%%
-% Brent McPherson
-% 20151231
-% import series of .tck files and create a key of # of fibers for each file
-% skips files that are empty
-%
-% Inputs:
-%   ens_tck: string with path to ensemble track outputs
-%   fout: sting of the output file name
-%
-% Outputs:
-%   fgOut: merged fiber group
-%   dict: meta information for determining # of fibers during virtual
-%   lesions
-%
-
-%% read out necessary unique values
+function [ dict ] = makeDict(ens_tck)
+% makeDict Summary of this function goes here
+%   Detailed explanation goes here
 
 display('indexing .tck files...');
 
@@ -25,23 +10,6 @@ files = dir(ens_tck);
 % remove dot folders
 files = files(3:length(files));
 
-%% THIS LOGIC DOES NOT WORK
-% create fout if it doesn't exist
-% copied from dtiImportFibersMrtrix.m
-if ~exist(fout, 'file')
-    
-    % Strip out the file name.
-    [ ~, f ] = fileparts(fout);
-    
-    % Build an empty mrDiffusion fier group.
-    fgOut = dtiNewFiberGroup(f);
-else 
-   
-    fgOut = load('fout');
-end
-%%
-
-% create counter for .tck files with fibers to keep dict small
 iter = 1;
 
 display('Beginning Loop of .tck files...');
@@ -58,12 +26,6 @@ for ii = 1:length(files)
         % read in, add to dictionary
         fg = dtiImportFibersMrtrix(fullfile(ens_tck, tmp));
         
-        % merge new fiber group w/ output fiber group
-        fgOut = dtiMergeFiberGroups(fgOut, fg, fout);
-        
-        % write down fgOut
-        fgWrite(fgOut, fout, 'mat');        
-                              
         % find indices of underscores
         und = strfind(tmp, '_');
         
@@ -102,23 +64,24 @@ for ii = 1:length(files)
     
 end
 
+% loop index for fiber counts
+%findx = 1;
+
 % create indice pairs for fibers for simplified subsets
-for jj = 1:length(dict)
+for file = 1:length(dict)
     
-    if jj == 1
-        dict(jj).ifib = [ 1 dict(jj).nfib ];
+    if file == 1
+        dict(file).ifib = [ 1 dict(file).nfib ];
         continue
     end
     
-    dict(jj).ifib = [ (dict(jj-1).ifib(2) + 1) ((dict(jj-1).ifib(2) + 1) + dict(jj).nfib - 1) ];
+    dict(file).ifib = [ (dict(file-1).ifib(2) + 1) ((dict(file-1).ifib(2) + 1) + dict(file).nfib - 1) ];
 
 end
 
-
 end
-% end of function
 
-%% internal functions
+%% internal fxn
 function count = feReadFiberCount(filename)
 % copied from dtiImportFibersMrtrix.m
 % just enough to get fiber counts
@@ -168,3 +131,4 @@ try
     % fprintf(1,'Reading Fiber Data for %d fibers...\n', count);
     end
 end
+

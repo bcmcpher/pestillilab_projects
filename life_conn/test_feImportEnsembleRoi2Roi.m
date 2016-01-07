@@ -10,3 +10,6 @@ fout = '/N/dc2/projects/lifebid/HCP/Brent/vss-2016/mrtrix/feImportTest.mat';
 tic;
 [ fgOut, dict ] = feImportEnsembleRoi2Roi(ens_tck, fout);
 toc;
+
+% create test dict of fiber counts
+ndict = makeDict(ens_tck);
