@@ -14,7 +14,7 @@ TOPDIR=/N/dc2/projects/lifebid/HCP/Brent
 PRJDIR=$TOPDIR/vss-2016
 OUTDIR=$PRJDIR/mrtrix
 ROIDIR=$OUTDIR/rois
-TCKDIR=$OUTDIR/ensemble_tracks
+TCKDIR=$OUTDIR/ensemble_tracks2
 
 ##
 ## convert / create files
@@ -63,8 +63,8 @@ TCKDIR=$OUTDIR/ensemble_tracks
 ## create fibers between each pair of ROIs
 ##
 
-TCKAL=("SD_STREAM" "SD_PROB")
-CURVE=("0.25" "0.50" "1.00" "2.00" "4.00")
+#TCKAL=("SD_STREAM" "SD_PROB")
+#CURVE=("0.25" "0.50" "1.00" "2.00" "4.00")
 COUNT=1
 # LOG=$OUTDIR/ensemble_tracks_count.log
 
@@ -103,14 +103,12 @@ for a; do
 		streamtrack $c $OUTDIR/CSD10.mif $TCKDIR/tck${CLABEL}_${c}_${d}_${A}_to_${B}.tck \
                     -seed $ROIDIR/seed_tmp.mif -mask $OUTDIR/wm_aseg.mif \
                     -grad $OUTDIR/dwi_data_b2000_aligned_trilin.b \
-                    -include $ROIDIR/$a -include $ROIDIR/$b -number 100 -maxnum 1000 -curvature $d
+                    -include $ROIDIR/$a -include $ROIDIR/$b -number 200 -maxnum 50000 -curvature $d
 
 		let COUNT=COUNT+=1
 	    done
 	done
 
-        ## DOES IT STOP WHEN IT EXITS WHITE MATTER OR WHEN IT HITS ROI
-	
 	## clear out seed file...
 	rm -f $ROIDIR/seed_tmp.mif
 
@@ -122,3 +120,9 @@ done
 ##     -grad $OUTDIR/dwi_data_b2000_aligned_trilin.b \
 ##     -include $ROIDIR/$a -include $ROIDIR/$b -number 100 -maxnum 1000 \ 
 ##     -step 0.2 -curvature 1
+
+
+## start new numbers with current mask
+## make corpus callosum ROI
+## - create new loop to do within first, btw w/ inflated corpus ROI -include
+## - create inflated corpus ROI and merge w/ wmMask

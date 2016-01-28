@@ -36,8 +36,7 @@ if ~exist(fout, 'file')
     % Build an empty mrDiffusion fier group.
     fgOut = dtiNewFiberGroup(f);
 else 
-   
-    fgOut = load('fout');
+    fgOut = load(fout);
 end
 %%
 
@@ -58,12 +57,16 @@ for ii = 1:length(files)
         % read in, add to dictionary
         fg = dtiImportFibersMrtrix(fullfile(ens_tck, tmp));
         
+        % this is the important merge operation - faster than the fgMerge / dtiMergeFiberGroups
+        % mergedFG.fibers = vertcat(fg1.fibers, fg2.fibers);
+        
         % merge new fiber group w/ output fiber group
         fgOut = dtiMergeFiberGroups(fgOut, fg, fout);
+        % write to disk at the end only, append option as well
         
         % write down fgOut
-        fgWrite(fgOut, fout, 'mat');        
-                              
+        %fgWrite(fgOut, fout, 'mat');        
+                
         % find indices of underscores
         und = strfind(tmp, '_');
         
@@ -71,7 +74,7 @@ for ii = 1:length(files)
         algo = tmp(und(2)+1:und(3)-1);
         
         % find curvature
-        curv = tmp(und(3)+1:und(4)-1);
+        curv = str2double(tmp(und(3)+1:und(4)-1));
         
         % split roi names
         % isolate roi descriptions and trim file exention
@@ -81,6 +84,21 @@ for ii = 1:length(files)
         splt = strfind(rois, '_to_');
         roi1 = rois(1:splt-1);
         roi2 = rois(splt+4:length(rois));
+        
+        % catch count of fibers
+        count = feReadFiberCount(fullfile(ens_tck, tmp));
+        
+        % more generalized dictionary structure
+        % dict(1).roi1 = 'ROI1';
+        % dict(1).roi2 = 'ROI2';
+        % dict(1).file = {'...tck', '...tck', ...};
+        % dict(1).algo = {'PROB', 'PROB', ...};
+        % dict(1).ifib = {[1 2], [3 7], ...};
+        
+        % for all ROI pairs; include empty files
+        % define dictionary structure / size before entering loop
+        % don't write fiber group to disk until the end
+        % save -append when writing fiber
         
         % create dictionary entry
         dict(iter).file = tmp;

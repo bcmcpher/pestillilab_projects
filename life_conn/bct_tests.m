@@ -137,7 +137,7 @@ out = threshold_absolute(em, 8);
 h = figure('name','Thresheld EMD Connectome Matrix', 'color','w');
 colormap('hot');
 hax = axes;
-imagesc(out);
+imagesc(em);
 hold on;
 title('Thresheld EMD Connectome Matrix');
 set(gca, 'YTick', 1:1:length(labelRoiNames), 'YTickLabel', fixLabel,'tickdir','out');
