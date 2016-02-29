@@ -117,19 +117,19 @@ for iRoi = 1:length(dict)
     if length(edge_indices) > 1
         
         try
-            wbSE{iRoi} = feVirtualLesion(wbfe, edge_indices');
+            SE{iRoi} = feVirtualLesion(fe, edge_indices');
         catch
             warning('Virtual Lesion may have removed all the fibers in the path neightborhood');
-            wbSE{iRoi}.em.mean = 0;
-            wbSE{iRoi}.s.mean = 0;
-            wbSE{iRoi}.brokeVL = 1;
+            SE{iRoi}.em.mean = 0;
+            SE{iRoi}.s.mean = 0;
+            SE{iRoi}.brokeVL = 1;
         end
         
     else
         
-        wbSE{iRoi}.em.mean = 0;
-        wbSE{iRoi}.s.mean = 0;
-        wbSE{iRoi}.brokeVL = 0;
+        SE{iRoi}.em.mean = 0;
+        SE{iRoi}.s.mean = 0;
+        SE{iRoi}.brokeVL = 0;
     
     end
 
