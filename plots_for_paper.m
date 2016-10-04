@@ -8,7 +8,7 @@
 % load data
 f01_detr = feMergeRepeats('hcp', '105115', 'detr', '2');
 f01_prob = feMergeRepeats('hcp', '105115', 'prob', '10');
-indx = 14;
+indx = 2;
 
 % raw data
 
@@ -75,13 +75,13 @@ line([68.5 0.5], [68.5 0.5], 'Color', [0 0 1]);
 indx = 1;
 figure('Position', [700 430 770 630]);
 colormap('hot');
-imagesc(detr02{indx}.emat.mean);
+imagesc(f01_prob{indx}.emat.mean > 0);
 axis('square'); axis('equal'); axis('tight');
 %title('Probabilistic Network');
 %xlabel('FS DK Regions');
 %ylabel('FS DK Regions');
-y = colorbar;
-ylabel(y, 'Number of Streamlines');
+%y = colorbar;
+%ylabel(y, 'Number of Streamlines');
 set(gca, 'XTickLabel', '', 'YTickLabel', '', 'XTick', [], 'YTick', []);
 line([34.5 34.5], [0.5 68.5], 'Color', [0 0 1]);
 line([0.5 68.5], [34.5 34.5], 'Color', [0 0 1]);
@@ -551,7 +551,7 @@ fh = figure;
 for ii = 1:10
     subplot(3, 4, ii)
     colormap('hot');
-    imagesc(log(edetr02{1}(:,:,ii)));
+    imagesc(log(iprob10{1}(:,:,ii)));
     axis('square'); axis('equal'); axis('tight');
     title('Average Deterministic Network');
     set(gca, 'XTickLabel', '', 'YTickLabel', '', 'XTick', [], 'YTick', []);

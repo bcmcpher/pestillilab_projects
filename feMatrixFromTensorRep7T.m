@@ -3,7 +3,7 @@ function [ emat, nmat, fns, pval, fdat, imat, time ] = feMatrixFromTensorRep7T(s
 % Brent McPherson
 % 20160710
 % 
-
+% [ z1, z2, z3, z4, z5, z6, z7 ] = feMatrixFromTensorRep7T(2, 'detr', '2', 1, 16);
 tic;
 
 % subject index - 1:10
@@ -47,7 +47,7 @@ file.dir.h7path = '/N/dc2/projects/lifebid/HCP7';
 file.hc7.dir.anat = fullfile(file.dir.h7path, file.hc7.name.subj, 'anatomy');
 
 % anat file names / repeats
-file.name.anat = 'T1w_acpc_dc_restore.nii.gz';
+file.name.anat = 'T1w_acpc_dc_restore_1.05.nii.gz';
 file.name.atlas = 'aparc+aseg.nii.gz';
 file.name.iter = {'01', '02', '03', '04', '05', '06', '07', '08', '09', '10'};
 
@@ -117,149 +117,149 @@ file.hc7.path.atlas = fullfile(file.hc7.dir.anat, file.name.atlas);
 
 % need to be numeric indices to pull from single file
 roiNames = {...
-    'lh_superiorfrontal_label.nii.gz';          % 1028
-    'lh_rostralmiddlefrontal_label.nii.gz';     % 1027
-    'lh_caudalmiddlefrontal_label.nii.gz';      % 1003
-    'lh_parsopercularis_label.nii.gz'; 	    % 1018
-    'lh_parsorbitalis_label.nii.gz'; 	    % 1019
-    'lh_parstriangularis_label.nii.gz'; 	    % 1020
-    'lh_lateralorbitofrontal_label.nii.gz';     % 1012
-    'lh_medialorbitofrontal_label.nii.gz'; 	    % 1014
-    'lh_precentral_label.nii.gz'; 		    % 1024
-    'lh_paracentral_label.nii.gz'; 		    % 1017
-    'lh_frontalpole_label.nii.gz'; 		    % 1032
-    'lh_rostralanteriorcingulate_label.nii.gz'; % 1026
-    'lh_caudalanteriorcingulate_label.nii.gz';  % 1002
-    'lh_insula_label.nii.gz'; 		    % 1035
-    'lh_superiorparietal_label.nii.gz'; 	    % 1029
-    'lh_inferiorparietal_label.nii.gz'; 	    % 1008
-    'lh_supramarginal_label.nii.gz'; 	    % 1031
-    'lh_postcentral_label.nii.gz'; 		    % 1022
-    'lh_precuneus_label.nii.gz'; 		    % 1025
-    'lh_posteriorcingulate_label.nii.gz'; 	    % 1023
-    'lh_isthmuscingulate_label.nii.gz'; 	    % 1010
-    'lh_inferiortemporal_label.nii.gz'; 	    % 1009
-    'lh_middletemporal_label.nii.gz'; 	    % 1015
-    'lh_superiortemporal_label.nii.gz'; 	    % 1030
-    'lh_bankssts_label.nii.gz'; 		    % 1001
-    'lh_fusiform_label.nii.gz'; 		    % 1007
-    'lh_transversetemporal_label.nii.gz'; 	    % 1034
-    'lh_entorhinal_label.nii.gz'; 		    % 1006
-    'lh_temporalpole_label.nii.gz'; 	    % 1033
-    'lh_parahippocampal_label.nii.gz'; 	    % 1016
-    'lh_lateraloccipital_label.nii.gz'; 	    % 1011
-    'lh_lingual_label.nii.gz'; 		    % 1013
-    'lh_cuneus_label.nii.gz'; 		    % 1005
-    'lh_pericalcarine_label.nii.gz';	    % 1021
-    'rh_superiorfrontal_label.nii.gz'; 	    % 2028
-    'rh_rostralmiddlefrontal_label.nii.gz';	    % 2027
-    'rh_caudalmiddlefrontal_label.nii.gz';	    % 2003
-    'rh_parsopercularis_label.nii.gz';	    % 2018
-    'rh_parsorbitalis_label.nii.gz';	    % 2019
-    'rh_parstriangularis_label.nii.gz';	    % 2020
-    'rh_lateralorbitofrontal_label.nii.gz';	    % 2012
-    'rh_medialorbitofrontal_label.nii.gz';	    % 2014
-    'rh_precentral_label.nii.gz';		    % 2024
-    'rh_paracentral_label.nii.gz';		    % 2017
-    'rh_frontalpole_label.nii.gz';		    % 2032
-    'rh_rostralanteriorcingulate_label.nii.gz'; % 2026
-    'rh_caudalanteriorcingulate_label.nii.gz';  % 2002
-    'rh_insula_label.nii.gz';		    % 2035
-    'rh_superiorparietal_label.nii.gz';	    % 2029
-    'rh_inferiorparietal_label.nii.gz';	    % 2008
-    'rh_supramarginal_label.nii.gz';	    % 2031
-    'rh_postcentral_label.nii.gz';		    % 2022
-    'rh_precuneus_label.nii.gz';		    % 2025
-    'rh_posteriorcingulate_label.nii.gz';	    % 2023
-    'rh_isthmuscingulate_label.nii.gz';	    % 2010
-    'rh_inferiortemporal_label.nii.gz';	    % 2009
-    'rh_middletemporal_label.nii.gz';	    % 2015
-    'rh_superiortemporal_label.nii.gz';	    % 2030
-    'rh_bankssts_label.nii.gz';		    % 2001
-    'rh_fusiform_label.nii.gz';		    % 2007
-    'rh_transversetemporal_label.nii.gz';	    % 2034
-    'rh_entorhinal_label.nii.gz';		    % 2006
-    'rh_temporalpole_label.nii.gz';		    % 2033
-    'rh_parahippocampal_label.nii.gz';	    % 2016
-    'rh_lateraloccipital_label.nii.gz';	    % 2011
-    'rh_lingual_label.nii.gz';		    % 2013
-    'rh_cuneus_label.nii.gz';		    % 2005
-    'rh_pericalcarine_label.nii.gz'};	    % 2021
+    'lh-superiorfrontal.nii.gz';          % 1028
+    'lh-rostralmiddlefrontal.nii.gz';     % 1027
+    'lh-caudalmiddlefrontal.nii.gz';      % 1003
+    'lh-parsopercularis.nii.gz'; 	    % 1018
+    'lh-parsorbitalis.nii.gz'; 	    % 1019
+    'lh-parstriangularis.nii.gz'; 	    % 1020
+    'lh-lateralorbitofrontal.nii.gz';     % 1012
+    'lh-medialorbitofrontal.nii.gz'; 	    % 1014
+    'lh-precentral.nii.gz'; 		    % 1024
+    'lh-paracentral.nii.gz'; 		    % 1017
+    'lh-frontalpole.nii.gz'; 		    % 1032
+    'lh-rostralanteriorcingulate.nii.gz'; % 1026
+    'lh-caudalanteriorcingulate.nii.gz';  % 1002
+    'lh-insula.nii.gz'; 		    % 1035
+    'lh-superiorparietal.nii.gz'; 	    % 1029
+    'lh-inferiorparietal.nii.gz'; 	    % 1008
+    'lh-supramarginal.nii.gz'; 	    % 1031
+    'lh-postcentral.nii.gz'; 		    % 1022
+    'lh-precuneus.nii.gz'; 		    % 1025
+    'lh-posteriorcingulate.nii.gz'; 	    % 1023
+    'lh-isthmuscingulate.nii.gz'; 	    % 1010
+    'lh-inferiortemporal.nii.gz'; 	    % 1009
+    'lh-middletemporal.nii.gz'; 	    % 1015
+    'lh-superiortemporal.nii.gz'; 	    % 1030
+    'lh-bankssts.nii.gz'; 		    % 1001
+    'lh-fusiform.nii.gz'; 		    % 1007
+    'lh-transversetemporal.nii.gz'; 	    % 1034
+    'lh-entorhinal.nii.gz'; 		    % 1006
+    'lh-temporalpole.nii.gz'; 	    % 1033
+    'lh-parahippocampal.nii.gz'; 	    % 1016
+    'lh-lateraloccipital.nii.gz'; 	    % 1011
+    'lh-lingual.nii.gz'; 		    % 1013
+    'lh-cuneus.nii.gz'; 		    % 1005
+    'lh-pericalcarine.nii.gz';	    % 1021
+    'rh-superiorfrontal.nii.gz'; 	    % 2028
+    'rh-rostralmiddlefrontal.nii.gz';	    % 2027
+    'rh-caudalmiddlefrontal.nii.gz';	    % 2003
+    'rh-parsopercularis.nii.gz';	    % 2018
+    'rh-parsorbitalis.nii.gz';	    % 2019
+    'rh-parstriangularis.nii.gz';	    % 2020
+    'rh-lateralorbitofrontal.nii.gz';	    % 2012
+    'rh-medialorbitofrontal.nii.gz';	    % 2014
+    'rh-precentral.nii.gz';		    % 2024
+    'rh-paracentral.nii.gz';		    % 2017
+    'rh-frontalpole.nii.gz';		    % 2032
+    'rh-rostralanteriorcingulate.nii.gz'; % 2026
+    'rh-caudalanteriorcingulate.nii.gz';  % 2002
+    'rh-insula.nii.gz';		    % 2035
+    'rh-superiorparietal.nii.gz';	    % 2029
+    'rh-inferiorparietal.nii.gz';	    % 2008
+    'rh-supramarginal.nii.gz';	    % 2031
+    'rh-postcentral.nii.gz';		    % 2022
+    'rh-precuneus.nii.gz';		    % 2025
+    'rh-posteriorcingulate.nii.gz';	    % 2023
+    'rh-isthmuscingulate.nii.gz';	    % 2010
+    'rh-inferiortemporal.nii.gz';	    % 2009
+    'rh-middletemporal.nii.gz';	    % 2015
+    'rh-superiortemporal.nii.gz';	    % 2030
+    'rh-bankssts.nii.gz';		    % 2001
+    'rh-fusiform.nii.gz';		    % 2007
+    'rh-transversetemporal.nii.gz';	    % 2034
+    'rh-entorhinal.nii.gz';		    % 2006
+    'rh-temporalpole.nii.gz';		    % 2033
+    'rh-parahippocampal.nii.gz';	    % 2016
+    'rh-lateraloccipital.nii.gz';	    % 2011
+    'rh-lingual.nii.gz';		    % 2013
+    'rh-cuneus.nii.gz';		    % 2005
+    'rh-pericalcarine.nii.gz'};	    % 2021
 
 % create plain name label
-roiLabel = strrep(roiNames, '_label.nii.gz', '');
-roiLabel = strrep(roiLabel, '_', '.');
+roiLabel = strrep(roiNames, '.nii.gz', '');
+roiLabel = strrep(roiLabel, '-', '.');
 
 % label values in aparc+aseg file that correspond to ROIs
-roiIndices = {...
-    1028;
-    1027;
-    1003;
-    1018;
-    1019;
-    1020;
-    1012;
-    1014;
-    1024;
-    1017;
-    1032;
-    1026;
-    1002;
-    1035;
-    1029;
-    1008;
-    1031;
-    1022;
-    1025;
-    1023;
-    1010;
-    1009;
-    1015;
-    1030;
-    1001;
-    1007;
-    1034;
-    1006;
-    1033;
-    1016;
-    1011;
-    1013;
-    1005;
-    1021;
-    2028;
-    2027;
-    2003;
-    2018;
-    2019;
-    2020;
-    2012;
-    2014;
-    2024;
-    2017;
-    2032;
-    2026;
-    2002;
-    2035;
-    2029;
-    2008;
-    2031;
-    2022;
-    2025;
-    2023;
-    2010;
-    2009;
-    2015;
-    2030;
-    2001;
-    2007;
-    2034;
-    2006;
-    2033;
-    2016;
-    2011;
-    2013;
-    2005;
-    2021};
+% roiIndices = {...
+%     1028;
+%     1027;
+%     1003;
+%     1018;
+%     1019;
+%     1020;
+%     1012;
+%     1014;
+%     1024;
+%     1017;
+%     1032;
+%     1026;
+%     1002;
+%     1035;
+%     1029;
+%     1008;
+%     1031;
+%     1022;
+%     1025;
+%     1023;
+%     1010;
+%     1009;
+%     1015;
+%     1030;
+%     1001;
+%     1007;
+%     1034;
+%     1006;
+%     1033;
+%     1016;
+%     1011;
+%     1013;
+%     1005;
+%     1021;
+%     2028;
+%     2027;
+%     2003;
+%     2018;
+%     2019;
+%     2020;
+%     2012;
+%     2014;
+%     2024;
+%     2017;
+%     2032;
+%     2026;
+%     2002;
+%     2035;
+%     2029;
+%     2008;
+%     2031;
+%     2022;
+%     2025;
+%     2023;
+%     2010;
+%     2009;
+%     2015;
+%     2030;
+%     2001;
+%     2007;
+%     2034;
+%     2006;
+%     2033;
+%     2016;
+%     2011;
+%     2013;
+%     2005;
+%     2021};
 
 %% start processing
 
@@ -311,35 +311,34 @@ fibLength = fefgGet(fe.fg, 'length'); % instantly
 
 display('Finding ROI fibers...');
 
-% load fe anatomy
-feAnat = readFileNifti(fe.path.anatomy);
-
-% load aparc+aseg.nii.gz
-aparc = readFileNifti(file.hc7.path.atlas);
-
-% find transform from aparc space to fe anatomy space
-
-% apply transform to image for alignment to ACPC from fe anatomy
-acpc_aparc = niftiApplyXform(aparc, fe.life.xform.acpc2img);
-% not working... can't permute / resample image
-
-% go ROI by ROI - like I currently am
-[ x, y, z ] = ind2sub(size(aparc.data), find(aparc.data == roiIndices{1}));
-
-% merge into ROI
-roi = [x, y, z];
-
-% convert coordinates to acpc space
-acpc_roi = mrAnatXformCoords(fe.life.xform.acpc2img, roi);
-acpc_roi = ceil(acpc_roi);
-
-% keep only uniqe voxel indices
-acpc_roi = unique(acpc_roi, 'rows');
-
-% check if transformed ROI is in fe.roi
-sum(ismember(fe.roi.coords, acpc_roi, 'rows'))
-% not working... indices way out of range
-
+% % load fe anatomy
+% feAnat = readFileNifti(fe.path.anatomy);
+% 
+% % load aparc+aseg.nii.gz
+% aparc = readFileNifti(file.hc7.path.atlas);
+% 
+% % find transform from aparc space to fe anatomy space
+% 
+% % apply transform to image for alignment to ACPC from fe anatomy
+% acpc_aparc = niftiApplyXform(aparc, fe.life.xform.acpc2img);
+% % not working... can't permute / resample image
+% 
+% % go ROI by ROI - like I currently am
+% [ x, y, z ] = ind2sub(size(aparc.data), find(aparc.data == roiIndices{1}));
+% 
+% % merge into ROI
+% roi = [x, y, z];
+% 
+% % convert coordinates to acpc space
+% acpc_roi = mrAnatXformCoords(fe.life.xform.acpc2img, roi);
+% acpc_roi = ceil(acpc_roi);
+% 
+% % keep only uniqe voxel indices
+% acpc_roi = unique(acpc_roi, 'rows');
+% 
+% % check if transformed ROI is in fe.roi
+% sum(ismember(fe.roi.coords, acpc_roi, 'rows'))
+% % not working... indices way out of range
 
 % iterate over ROI values to find indices of intersecting fibers
 
@@ -350,7 +349,7 @@ for ii = 1:length(roiNames)
     out{ii}.name = roiNames{ii};
     
     % load ROI
-    roi = dtiImportRoiFromNifti(char(fullfile(file.dir.anat, 'label', roiNames{ii})));
+    roi = dtiImportRoiFromNifti(char(fullfile('/N/dc2/projects/lifebid/HCP/Brent/7t_rerun', file.hc7.name.subj, 'label', roiNames{ii})));
     
     % grab size of ROI fibers in output object
     out{ii}.vxsize = size(roi.coords, 1);
@@ -379,9 +378,8 @@ for ii = 1:length(roiNames)
     % create sub-index of sptensor for fibers to keep
     [ inds1, ~ ] = find(fe.life.M.Phi(:, vx.index, :));
     
-    % This failed one job - why?
     % pull unique intersecting fiber indices into output object
-    if size(inds1) > 0
+    if size(inds1, 2) > 2
         out{ii}.int.fibers = unique(inds1(:, 3));
     else
         out{ii}.int.fibers = [];
@@ -393,9 +391,15 @@ for ii = 1:length(roiNames)
     % for every fiber intersecting the ROIs, find the 2 end points
     % able to back-track end points by +/- indices into endpoint cell-array
     
-    for jj = 1:length(vx.nodes)
-        vx.ep(jj, 1) = vx.nodes{jj}(1);
-        vx.ep(jj, 2) = vx.nodes{jj}(length(vx.nodes{jj}));
+    % there are fibers
+    if ~isempty(vx.nodes)
+        for jj = 1:length(vx.nodes)
+            vx.ep(jj, 1) = vx.nodes{jj}(1);
+            vx.ep(jj, 2) = vx.nodes{jj}(length(vx.nodes{jj}));
+        end
+    else % there are not fibers, set to zero
+        vx.ep(1, 1) = 0;
+        vx.ep(1, 2) = 0;
     end
     
     % redo the logic above w/ endpoint indices
@@ -480,7 +484,7 @@ display('Finding each unique pairs intersections...');
 pairs = nchoosek(1:length(roiNames), 2);
 
 % for every unique pair, find intersecting fibers
-for ii = 1:length(pairs)
+parfor ii = 1:length(pairs)
     
     % pull output regions into tmp objects for clarity of code
     reg1 = out{pairs(ii, 1)};
@@ -904,14 +908,17 @@ end
 
 display('Saving data...');
 
-switch dataGroup
-    case 'stn'
-        saveNames = char(strcat('7T_', file.stn.name.dir(file.name.indx), '_', dataModel, '_', file.name.lmax, '_rep', file.name.iter{rep}, '.mat'));
-    case 'hcp'
-        saveNames = char(strcat('7T_', file.hcp.name.dir(file.name.indx), '_', dataModel, '_', file.name.lmax, '_rep', file.name.iter{rep}, '.mat'));
-    otherwise
-        error('No valid data group selected');
-end
+%dataGroup = 'hcp';
+% switch dataGroup
+%     case 'stn'
+%         saveNames = char(strcat('7T_', file.stn.name.dir(file.name.indx), '_', dataModel, '_', file.name.lmax, '_rep', file.name.iter{rep}, '.mat'));
+%     case 'hcp'
+%         saveNames = char(strcat('7T_', file.hc7.name.dir(file.name.indx), '_', dataModel, '_', file.name.lmax, '_rep', file.name.iter{rep}, '.mat'));
+%     otherwise
+%         error('No valid data group selected');
+% end
+
+saveNames = char(strcat('7T_', file.hc7.name.dir(file.name.indx), '_', dataModel, '_', file.name.lmax, '_rep', file.name.iter{rep}, '.mat'));
 
 time = toc;
 

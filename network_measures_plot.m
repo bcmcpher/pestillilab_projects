@@ -20,9 +20,26 @@ nodLabel = {'Strength', 'Degree', 'Betweenness', 'Eigenvector Centrality', ...
             'Partial Coefficiency', 'Modularity'};
 modLabel = {'Fiber Density', 'NonZero Density', 'EMD'};
 
-% build color map - just hard code numbers once I have 7T values
+%% build color map - just hard code numbers once I have 7T values
+
+% from 2 color maps
 c1 = colormap(parula(64));
 c2 = colormap(autumn(64));
+
+% % this is the order and subsets Cesar pulled on the subjects
+% HCP_subject_set = {'111312','105115','113619','110411'};
+% STN_subject_set = {'KK_96dirs_b2000_1p5iso','FP_96dirs_b2000_1p5iso','HT_96dirs_b2000_1p5iso','MP_96dirs_b2000_1p5iso'};
+% HCP7T_subject_set = {'108323','131217','109123','910241'};
+% switch color_type
+%     case 'cold'
+%         c = [c1([1 3 6 9],:) ];
+%     case 'medium'
+%         c = [c1([12 16 19 23],:) ];
+%     case 'hot'
+%         c = [c2([32 25 13 5],:)];
+% end
+
+% in the end, hardcode tcol w/ all colors in the order I use the subjects
 tcol = [ c2([49 40 28 4],:); c1([4 15 27 31],:) ];
 clear c1 c2;
 close all;
@@ -58,12 +75,15 @@ for imod = 1:length(glbLabel)
                     % combine subject and lmax jitter for more obvious offsets
                     jitter = sjit(ii) + ljit(ll);
                     dlab = [alg '_' param];
-                    pt = eval(['dat{' num2str(ii) '}.' dlab '.glob{' num2str(jj) '}(' num2str(imod) ',:)' ]);
-                    plot(pt(1), jj+jitter, shape, 'Color', tcol(ii,:), 'MarkerFaceColor', tcol(ii,:), 'MarkerEdgeColor', 'k', 'LineWidth', 0.5, 'MarkerSize', 10);
-                    plot([pt(2) pt(3)], [jj jj]+jitter,  'LineWidth', 2, 'Color', [0 0 0]);
+                     pt = eval(['dat{' num2str(ii) '}.' dlab '.glob{' num2str(jj) '}(' num2str(imod) ',:)' ]);
+                     plot(pt(1), jj+jitter, shape, 'Color', tcol(ii,:), 'MarkerFaceColor', tcol(ii,:), 'MarkerEdgeColor', 'k', 'LineWidth', 0.5, 'MarkerSize', 10);
+                     plot([pt(2) pt(3)], [jj jj]+jitter,  'LineWidth', 2, 'Color', [0 0 0]);
                 end
             end
-            % add tensor points here
+            % plot tensor points
+            pt = eval(['dat{' num2str(ii) '}.tens.glob{' num2str(jj) '}(' num2str(imod) ',:)' ]);
+            plot(pt(1), jj+sjit(ii), 'diamond', 'Color', tcol(ii,:), 'MarkerFaceColor', tcol(ii,:), 'MarkerEdgeColor', 'k', 'LineWidth', 0.5, 'MarkerSize', 10);
+            plot([pt(2) pt(3)], [sjit(ii) sjit(ii)]+jj,  'LineWidth', 2, 'Color', [0 0 0]);
         end
     end
     % plot labels
@@ -121,7 +141,10 @@ for ii = 1:length(dat)
                 plot([sjit(ii,:); sjit(ii,:)], [pt(:,2)'; pt(:,3)'],'LineWidth', 1, 'Color', [0 0 0]);  
             end
         end
-        % add tensor points here
+        % plot tensor points
+        %pt = eval(['dat{' num2str(ii) '}.tens.glob{' num2str(jj) '}(' num2str(imod) ',:)' ]);
+        %plot(pt(1), jj+sjit(ii), 'diamond', 'Color', tcol(ii,:), 'MarkerFaceColor', tcol(ii,:), 'MarkerEdgeColor', 'k', 'LineWidth', 0.5, 'MarkerSize', 10);
+        %plot([pt(2) pt(3)], [sjit(ii) sjit(ii)]+jj,  'LineWidth', 2, 'Color', [0 0 0]);
     end
 end
 % plot labels
