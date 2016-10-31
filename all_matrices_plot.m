@@ -11,12 +11,15 @@
 [ detr10, idetr10, sdetr10 ] = feMergeRepeats('hcp', '105115', 'detr', '10');
 [ prob02, iprob02, sprob02 ] = feMergeRepeats('hcp', '105115', 'prob', '2');
 [ prob10, iprob10, sprob10 ] = feMergeRepeats('hcp', '105115', 'prob', '10');
+[ tens02, itens02, stens02 ] = feMergeRepeats('hcp', '105115', 'tens', '2');
 
-%% plot labeled matrix
+%% plot labeled and unlabeled matrix
 
 % isolate data set for plotting here
 % log transform if desired
-mat = log(idetr02{1}(:, :, 3));
+mat = detr02{5}.emat.mean;
+mat = log(iprob10{1}(:,:,3));
+%out = 'tens02';
 
 % plot connectivity matrix w/ labels
 figure('Position', [700 430 770 630]);
@@ -27,11 +30,27 @@ title('Probabilistic Network');
 xlabel('FS DK Regions');
 ylabel('FS DK Regions');
 y = colorbar;
-%ylabel(y, 'Number of Streamlines');
+caxis([0 8]);
+ylabel(y, 'Log Number of Streamlines');
 set(gca, 'XTickLabel', '', 'YTickLabel', '', 'XTick', [], 'YTick', []);
 line([34.5 34.5], [0.5 68.5], 'Color', [0 0 1]);
 line([0.5 68.5], [34.5 34.5], 'Color', [0 0 1]);
 line([68.5 0.5], [68.5 0.5], 'Color', [0 0 1]);
+%saveas(gcf, [ 'sfn2016/labeled_' out '.eps'], 'epsc');
+
+% plot connectivity matrix w/ labels
+figure('Position', [700 430 770 630]);
+colormap('hot');
+imagesc(mat);
+axis('square'); axis('equal'); axis('tight');
+set(gca, 'XTickLabel', '', 'YTickLabel', '', 'XTick', [], 'YTick', []);
+y = colorbar;
+ylabel(y, 'Fiber Count');
+%caxis([0 8]);
+line([34.5 34.5], [0.5 68.5], 'Color', [0 0 1]);
+line([0.5 68.5], [34.5 34.5], 'Color', [0 0 1]);
+line([68.5 0.5], [68.5 0.5], 'Color', [0 0 1]);
+%print([ 'sfn2016/nolabel_' out ], '-dpng');
 
 %% plot plain matrix
 

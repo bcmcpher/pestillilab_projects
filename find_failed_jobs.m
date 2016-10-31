@@ -124,5 +124,40 @@ fclose(fid);
 
 dlmwrite('7t_fix_jobs.txt', nrun);
 
+%% finally, check all files
+
+% create list of linked files
+files = dir('data/*.mat');
+names = {files.name};
+
+% build full list of file names
+subj = {'hcp_105115', 'hcp_110411', 'hcp_111312', 'hcp_113619', 'stn_FP', 'stn_HT', 'stn_KK', 'stn_MP', '7T_108323', '7T_109123', '7T_131217', '7T_910241'};
+trck = {'detr', 'prob'};
+lmax = {'2', '4', '6', '8', '10', '12'};
+reps = {'01', '02', '03', '04', '05', '06', '07', '08', '09', '10'};
+
+iter = 1;
+for ii = 1:12 % subjects / dataset
+    for jj = 1:2 % detr / prob
+        for kk = 1:6 % lmax
+            for ll = 1:10 % reps
+                all_names{iter} = [ subj{ii} '_' trck{jj} '_lmax' lmax{kk} '_rep' reps{ll} '.mat' ];
+                iter = iter + 1;
+            end
+        end
+    end
+end
+
+iter = 1;
+for ii = 1:12
+    for jj = 1:10
+        tens_names{iter} = [subj{ii} '_tens_lmax2_rep' reps{jj} '.mat' ];
+        iter = iter + 1;
+    end
+end
+
+all_names = [all_names tens_names];
+[ nrun, indx ] = setdiff(all_names, names);
+% looks for but does not find (and should not find) lmax10 / lmax12 7T data
 
 

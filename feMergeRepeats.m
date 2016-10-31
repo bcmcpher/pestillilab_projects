@@ -9,7 +9,7 @@ function [ avgOut, ematOut, fnsOut, pvalOut, fdatOut ] = feMergeRepeats(dgrp, su
 %% indentify files based on subject
 
 % hard-coded reference to data directory
-topdir = '/N/dc2/projects/lifebid/HCP/Brent/cogs610/reps_data';
+topdir = '/N/dc2/projects/lifebid/HCP/Brent/cogs610/matlab/data';
 
 % format numeric lmax interface to 
 %lmax = sprintf('%02d', lmax);
